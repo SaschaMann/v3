@@ -11,7 +11,7 @@ jobs:
     if: github.event.issue.pull_request != '' && contains(github.event.comment.body, '/format')
     steps:          
       - name: 'Setup SSH deploy key'
-        if: github.event.issue.pull_request.fork == false
+        if: github.event.issue.pull_request.head.repo.fork == false
         run: |
           mkdir ~/.ssh
           echo "${{ secrets.DEPLOY_KEY }}" > ~/.ssh/id_ed25519
@@ -26,7 +26,7 @@ jobs:
 
           HEAD_REF=$(jq -r ".head.ref" "$PR_DATA")
           
-          if [ ${{ github.event.issue.pull_request.fork }} == "false" ]; then
+          if [ ${{ github.event.issue.pull_request.head.repo.fork }} == "false" ]; then
             # Setup repo using ssh
             HEAD_REPO=$(jq -r '.head.repo.ssh_url' "$PR_DATA")
           else
